@@ -5,57 +5,55 @@ import { FaApple } from "react-icons/fa";
 import { IoEye } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+
 function Login(props) {
+  const {isAuthenticate,setAuthenticate}=props
+  
   const navigate=useNavigate()
-  const {setAuthenticate , isAuthenticate} =props
-  if(isAuthenticate){
-    navigate('/')
-  }
-  // console.log(setAuthenticate);
+ 
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [Email, setEmail]=useState("harshsaini661@gmail.com");  //store the email string whent user enter the email on input field
+
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm()
 
-const handleInputChange=(event)=>{
-  const emailValue = event.target.value;  // Get the value of the email input
-  console.log("Email Input Value: ", emailValue);  // Log it for debugging
-  setEmail(emailValue);  // Update the Email state with the new value
-}
-console.log("Email===>>",Email)
-useEffect(() => {
+//
 
-  if(Email){
-    
- 
-  const fetchData = async (Email) => {
+  const fetchData = async (Email,password) => {
     try {
-      const response = await fetch("http://localhost:3000/user/userDetailBasedOnEmail", {
+      const response = await fetch("http://localhost:3000/user/userLogin", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           // 'token':"123456"
         },
-        body: JSON.stringify({ email: Email }),
+        body: JSON.stringify({ email: Email,password:password }),
       });
-      console.log(await response.json());  // Handle the response properly
+      // console.log(await response.json());  // Handle the response properly
+      if(response.status === 200){
+        navigate('/')
+        setAuthenticate(true)
+      }
     } catch (err) {
       console.log("something went wrong in fetch the data based on email",err);
     }
   };
-  fetchData(Email);
-}
-}, [Email]);
-
-
-
+  
+  
+  
+  
+  
   const onSubmit = (data) => {
-    setAuthenticate(true)
-    console.log(data)
+    
+    fetchData(data.email,data.password);
+    // console.log("=====>>>",data)
+    
+
     setIsSubmitting(true);
+
     setTimeout(() => {
       console.log('Form submitted!');
       setIsSubmitting(false);  // Set isSubmitting back to false when done
@@ -79,7 +77,7 @@ useEffect(() => {
                 <input
                   type="email"
                   placeholder="Email"
-                  onChange={handleInputChange}
+                  // onChange={handleInputChange}
                   className="w-full pl-3 h-10 rounded-md text-white border border-gray-600 bg-[#3b364c]"
                   {...register("email",{required:{value:true,message:"Please enter the email first!"},
                     //required: "Please enter the email first"

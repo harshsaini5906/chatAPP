@@ -7,13 +7,13 @@ dotenv.config();
 //********************user register API**************************/
 export const userRegister = async (req, res) => {
   try {
-    const { fullname, email, password, number ,profileImage} = req.body;
+    const { fullname, email, password, number, profileImage } = req.body;
 
     const existUser = await userModel.findOne({ email: email });
     if (existUser) {
       return res
         .status(400)
-        .json({ status:400,error: "user already register with this email" });
+        .json({ status: 400, error: "user already register with this email" });
     }
     const newUser = new userModel({
       name: fullname,
@@ -104,11 +104,10 @@ export const userDetail = async (req, res) => {
   }
 };
 
-
 //********************************************************************** */
 export const userDetailBasedOnEmail = async (req, res) => {
   try {
-    const { email}=req.body;
+    const { email } = req.body;
     // const token = req.headers.token;
     // if (!token) {
     //   return res.status(400).json({ error: "token not found" });
@@ -116,7 +115,7 @@ export const userDetailBasedOnEmail = async (req, res) => {
     // const tokenData = jwt.verify(token, process.env.JWT_SECRET);
     const existUser = await userModel.findOne(
       { email: email },
-      {profileImage: 1,email:1}
+      { profileImage: 1, email: 1 }
     );
     if (existUser) {
       return res.status(200).json({
@@ -132,9 +131,6 @@ export const userDetailBasedOnEmail = async (req, res) => {
     res.status(500).json({ status: 500, resmessage: "Internal server error" });
   }
 };
-
-
-
 
 //******************user profile image upload API*************************/
 export const profileUpload = async (req, res) => {
@@ -153,19 +149,65 @@ export const profileUpload = async (req, res) => {
       { $set: { profileImage: profileImgageURl } }
     );
     if (uploadData) {
-      return res
-        .status(200)
-        .json({
-          status: 200,
-          resmessage: "profile image upload successfully",
-          uploadData,
-        });
+      return res.status(200).json({
+        status: 200,
+        resmessage: "profile image upload successfully",
+        uploadData,
+      });
     } else {
       return res.status(402).json({ error: "profile not upload successfull" });
     }
   } catch (err) {
     console.log("something went wrong catch block executed", err);
     return res.status(500).json({ resmessage: "Internal server error" });
+  }
+};
+
+//**********************user list ******************************/
+export const userList = async (req, res) => {
+  try {
+    const userlist = await userModel.find({});
+
+    if (userlist.length > 0) {
+      return res
+        .status(200)
+        .json({
+          status: 200,
+          resmessage: "userList fetch successfully",
+          userlist,
+        });
+    } else {
+      return res
+        .status(400)
+        .json({ status: 400, resmessage: "user list not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ status: 500, resmessage: "Internal server error" });
+  }
+};
+
+
+//******************search user ***************** */
+export const searchUser = async (req, res) => {
+  try {
+    const { name } = req.body;
+    const userlist = await userModel.find({ name: new RegExp(name ,'i') ,});
+    if (userList.length > 0) {
+      return res
+        .status(200)
+        .json({
+          status: 200,
+          resmessage: "user list based on search",
+          userlist,
+        });
+    } else {
+      return res
+        .status(400)
+        .json({ status: 400, resmessage: "user not found based on name" });
+    }
+  } catch (err) {
+    console.log("something went wrong catch block executed", err);
+    res.status(500).json({ status: 500, resmessage: "Internal server error" });
   }
 };
 

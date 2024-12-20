@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { createBrowserRouter, RouterProvider ,useNavigate} from "react-router-dom"
 import Login from "../components/Login.jsx"
 import Left from "../home/LeftPart/Left.jsx"
 import Right from "../home/RightPart/Right.jsx"
@@ -7,7 +7,7 @@ import Signup from "../components/Signup.jsx"
 import React,{useState} from 'react'
 
 function Routes() {
- 
+
  const [isAuthenticate,setAuthenticate]=useState(false);
 
 //  const setTrue=(data)=>{
@@ -20,12 +20,12 @@ function Routes() {
             element: isAuthenticate ? <div className="flex h-screen">
              <Left/>
              <Right/>
-            </div> : <Login  setAuthenticate={setAuthenticate} isAuthenticate={isAuthenticate}/>
+            </div> : <Login setAuthenticate={setAuthenticate} isAuthenticate={isAuthenticate}/>
         },
         {
             path:"/login",
-            element: <Login/>,
-            // element: <Login setAuthenticate={setAuthenticate} isAuthenticate={isAuthenticate}/>,
+            // element: <Login/>,
+            element: <Login setAuthenticate={setAuthenticate} isAuthenticate={isAuthenticate}/>,
             // children:{
             //     path:"/signup",
             //     element:<Signup/>

@@ -1,6 +1,8 @@
 import React from 'react'
 
-function User() {
+function User(props) {
+  const {name,email}=props.user
+  console.log("===>>",name,email)
   return (
     <div>
 
@@ -11,8 +13,8 @@ function User() {
       </div>
     </div>
     <div className="text-white">
-      <h1 className='font-bold'>Harsh</h1>
-      <span>harshsaini661@gmail.com</span>
+      <h1 className='font-bold text-white'>{name}</h1>
+      <span className='text-white text-sm'>{email}</span>
     </div>
   </div>
 
