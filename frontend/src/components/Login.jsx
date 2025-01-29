@@ -1,19 +1,30 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useContext } from "react";
 import loginImg from "../assets/img/login.png";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
 import { IoEye } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-
+import { UserContext } from "../../context/UserContext";
+import { ToastContainer, Zoom, toast } from 'react-toastify';
+import {getFcmToken} from '../firebase/firebaseConfig.js'
+import  {googleSignFunction}  from "../firebase/firebaseAuth.js"
 function Login(props) {
   const {isAuthenticate,setAuthenticate}=props
-  
+  const {setLogin}=useContext(UserContext)
   const navigate=useNavigate()
- 
-
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  // const [generateToken, setGenerateToken] = useState(false);   //fcm token ke liye
+  // const [fcmToken,setFcmToken]=useState();
+  
+  // useEffect(()=>{
+  //   if(generateToken){
+  //    const token= getFcmToken();   //used for generate the fcm token after successfull login.
+  //    setFcmToken(token)
+  //   }
+  // },[generateToken])
+ 
   const {
     register,
     formState: { errors },
@@ -22,20 +33,34 @@ function Login(props) {
 
 //
 
-  const fetchData = async (Email,password) => {
+  const fetchData = async (Email,password,deviceToken) => {
     try {
-      const response = await fetch("http://localhost:3000/user/userLogin", {
+      let response = await fetch("http://localhost:3000/user/userLogin", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           // 'token':"123456"
         },
-        body: JSON.stringify({ email: Email,password:password }),
+        body: JSON.stringify({ email: Email,password:password ,deviceToken:deviceToken}),
       });
-      // console.log(await response.json());  // Handle the response properly
-      if(response.status === 200){
-        navigate('/')
-        setAuthenticate(true)
+      // console.log("------------",await response.json());  // Handle the response properly
+      const result = await response.json();
+      // console.log("result===",result.existUser)
+      if(result.status == 200){
+        toast.success("Login Successfull");
+        // setGenerateToken(true)   // Trigger FCM token generation function after successful login
+        setTimeout(()=>{
+          navigate('/')
+          setAuthenticate(true)
+          setLogin(result.existUser)
+          // console.log("===============",result);
+          localStorage.setItem("token",result.existUser.token);
+          localStorage.setItem("userId",result.existUser._id);
+         
+
+        },1000)
+      }else{
+        toast.error("Invalid credentials");
       }
     } catch (err) {
       console.log("something went wrong in fetch the data based on email",err);
@@ -46,9 +71,10 @@ function Login(props) {
   
   
   
-  const onSubmit = (data) => {
-    
-    fetchData(data.email,data.password);
+  const onSubmit = async(data) => {
+    const token= await getFcmToken();
+    console.log("token",token)
+    fetchData(data.email,data.password,token);
     // console.log("=====>>>",data)
     
 
@@ -60,9 +86,10 @@ function Login(props) {
     }, 2000);
   }
   return (
-    <div className="h-screen w-full bg-[#605a72] flex justify-center items-center">
-      <div className=" h-[80%] w-[70%] flex bg-[#2b2738] rounded-2xl">
-        <div className="w-[50%]  flex justify-center items-center m-4 border border-gray-500 rounded-lg">
+    <div className="h-screen w-full  bg-[#b5a7eb] flex justify-center items-center ">
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={true} newestOnTop={true} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover transition={Zoom} />
+      <div className=" h-[70%] w-[30%] flex bg-[#2b2738] rounded-2xl">
+        <div className="w-[100%]  flex justify-center items-center m-4 border border-gray-500 rounded-lg">
           <div className="h-[90%] w-[90%] ">
             <h1 className="font-sans text-[#f9f9f8] font-semibold text-2xl mb-2 text-center ">
               Login your account
@@ -98,7 +125,7 @@ function Login(props) {
                 <input
                   type="password"
                   placeholder="Enter your password"
-                  className="w-full h-10 rounded-md text-white pl-3 bg-[#3b364c] border border-gray-600 "
+                  className="w-full h-10 rounded-md text-white pl-3 bg-[#3b364c] border border-gray-600"
                 {...register("password",{required:"Please enter password!",minLength:{value:2, message: "Password must be at least 2 characters long"}})}
                />
                 <p className="text-red-500">{errors.password?.message}</p>
@@ -114,27 +141,29 @@ function Login(props) {
 
             <div className="flex space-x-8  mt-6 justify-center items-center">
 
-              <div className="border border-gray-600 p-2 rounded-lg w-[20%] flex justify-center items-center cursor-pointer hover:animate-bounce">
-                {<FcGoogle className="mr-1 size-8"/>}
+              <div onClick={googleSignFunction} className="border border-gray-600 p-2 rounded-lg w-[30%] gap-1 flex justify-center items-center cursor-pointer hover:bg-[#484063]">
+                {<FcGoogle className=" "/>}
                 <h1 className="text-gray-200">Google</h1>
               </div>
 
-              <div className="border border-gray-600 p-2 rounded-lg w-[20%] flex justify-center items-center cursor-pointer hover:animate-bounce">
-                <FaApple className="mr-1 text-white size-8"/>
+              <div className="border border-gray-600 p-2 rounded-lg w-[30%] gap-1 flex justify-center items-center cursor-pointer hover:bg-[#484063]">
+                <FaApple className=" text-white "/>
                 <h1 className="text-gray-200">Apple</h1>
               </div>
             </div>
+        
           </div>
         </div>
 
-        <div className="w-[50%] m-4">
+        {/* <div className="w-[50%] m-4">
           <img
             src={loginImg}
             alt="img not found"
             className="h-[90%] w-[100%]"
           />
-        </div>
+        </div> */}
       </div>
+     
     </div>
   );
 }

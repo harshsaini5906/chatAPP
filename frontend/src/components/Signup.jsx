@@ -60,8 +60,9 @@ function Signup() {
 
   }
   return (
-    <div className="h-screen w-full bg-gray-950 flex justify-center items-center">
-      <div className="border border-gray-600 rounded-lg w-[35%] h-[60%] p-4">
+    <div className="h-screen w-full  bg-[#b5a7eb] flex justify-center items-center ">
+      <div className="border  bg-[#2b2738] rounded-2xl w-[30%] h-[70%] p-4">
+        <div className=" border border-gray-500 rounded-lg p-2 h-[100%] ">
         <h1 className="font-bold text-center text-gray-300 mb-3">
           Chat <span className="text-[#0AC92B]	">App</span>
         </h1>
@@ -70,14 +71,14 @@ function Signup() {
         <form onSubmit={handleSubmit(onSubmit)} enctype="multipart/form-data">
           <div className="flex flex-col">
             <input
-              className="border-2 bg-gray-950 m-1 p-2 pl-3 rounded-md border-gray-500 text-white"
+              className="border-2  bg-[#3b364c] m-1 p-2 pl-3 rounded-md border-gray-500 text-white"
               type="text"
               placeholder="Fullname"
               {...register("fullname",{required:"Please enter the fullname!"})}
               />
               <p className="text-red-500">{errors.fullname?.message}</p>
             <input
-               className="border-2 bg-gray-950 m-1 p-2 pl-3 rounded-md border-gray-500 text-white"
+               className="border-2  bg-[#3b364c] m-1 p-2 pl-3 rounded-md border-gray-500 text-white"
                type="text"
                placeholder="Email"
                {...register("email",{required:"Please enter the email!",
@@ -91,7 +92,7 @@ function Signup() {
             />
               <p className="text-red-500">{errors.email?.message}</p>
             <input
-              className="border-2 bg-gray-950 m-1 p-2 pl-3 rounded-md border-gray-500 text-white"
+              className="border-2  bg-[#3b364c] m-1 p-2 pl-3 rounded-md border-gray-500 text-white"
               type="password"
               placeholder="Password"
               {...register("password",{required:"Please enter password!",
@@ -100,7 +101,7 @@ function Signup() {
               />
               <p className="text-red-500">{errors.password?.message}</p>
             <input
-               className="border-2 bg-gray-950 m-1 p-2 pl-3 rounded-md border-gray-500 text-white"
+               className="border-2 bg-[#3b364c] m-1 p-2 pl-3 rounded-md border-gray-500 text-white"
                type="text"
                placeholder="Confirm Password"
                {...register("confirmPassword",{required:"Please enter confirm password!"})}
@@ -108,7 +109,7 @@ function Signup() {
               <p className="text-red-500">{errors.confirmPassword?.message}</p>
 
               <input
-               className="border-2 bg-gray-950 m-1 p-2 pl-3 rounded-md border-gray-500 text-white"
+               className="border-2  bg-[#3b364c] m-1 p-2 pl-3 rounded-md border-gray-500 text-white"
                type="file"
                placeholder="Select profile image"
                {...register("profileImage")}
@@ -119,17 +120,18 @@ function Signup() {
           <div>
             <h1 className="text-gray-300">
               Have an account?{" "}
-              <span className="text-blue-800 ">
+              <span className="text-red-300 ">
                 <button className="underline" onClick={()=>{navigate("/login")}}>Login</button>
               </span>
             </h1>
           </div>
-          <div className="text-white p-1 rounded-md  bg-[#0AC92B]">
+          <div className="text-white p-1 rounded-md  bg-[#6e54b5] hover:bg-[#CB6396]">
             <button disabled={isdisabled}>Signup</button>
           </div>
         </div>
         </form>
-
+        
+        </div>
 
       </div>
     </div>

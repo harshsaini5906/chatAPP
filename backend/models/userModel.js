@@ -27,6 +27,10 @@ const userSchema=new mongoose.Schema({
     profileImage:{
         type:String,
         default:""
+    },
+    deviceToken:{                        //used to send notification to specific device
+        type:String,
+        default:""
     }
 
 })

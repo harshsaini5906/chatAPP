@@ -34,8 +34,12 @@ const messageSchema=new mongoose.Schema({
     type:{
         type:String,
         default:"",
-        enum:["text","URL","media"]
+        // enum:["text","URL","media"]
     },
+    image:{
+        type:String,
+        default:""
+    }
 
 
 });

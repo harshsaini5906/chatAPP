@@ -1,8 +1,10 @@
 import { createBrowserRouter, RouterProvider ,useNavigate} from "react-router-dom"
 import Login from "../components/Login.jsx"
+import { OptionNavBar } from "../home/NavLeft/OptionNavBar.jsx"
 import Left from "../home/LeftPart/Left.jsx"
 import Right from "../home/RightPart/Right.jsx"
 import Signup from "../components/Signup.jsx"
+import NavBody from "../portfolio/NavBody.jsx"
 
 import React,{useState} from 'react'
 
@@ -17,7 +19,9 @@ function Routes() {
     const routes=createBrowserRouter([
         {
             path:"/",
-            element: isAuthenticate ? <div className="flex h-screen">
+            // element:<NavBody/>
+            element: isAuthenticate ?  <div className="flex h-screen">
+            <OptionNavBar/>
              <Left/>
              <Right/>
             </div> : <Login setAuthenticate={setAuthenticate} isAuthenticate={isAuthenticate}/>

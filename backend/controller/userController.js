@@ -37,7 +37,7 @@ export const userRegister = async (req, res) => {
 //************************userLogin API************************ */
 export const userLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password,deviceToken } = req.body;
 
     const existUser = await userModel.findOne({
       email: email,
@@ -47,7 +47,7 @@ export const userLogin = async (req, res) => {
       const token = jwt.sign(
         { userId: existUser._id },
         process.env.JWT_SECRET,
-        { expiresIn: "5h" }
+        { expiresIn: "1d" }
       );
 
       res.cookie("token", token, {
@@ -58,7 +58,7 @@ export const userLogin = async (req, res) => {
       });
       const updateToken = await userModel.updateOne(
         { _id: existUser._id },
-        { $set: { token: token } }
+        { $set: { token: token,deviceToken:deviceToken } }
       );
 
       return res.status(200).json({

@@ -5,9 +5,16 @@ import cookieParser from 'cookie-parser';
 import cors from "cors"
 import dotenv from "dotenv"
 dotenv.config()
-
-const app =express();
-app.use(cors());
+import {server,app} from "./socket/sockit.js"
+// const app =express();
+const corsOptions = {
+    origin: 'http://localhost:5173', // replace with your frontend URL
+    methods: ['GET', 'POST'],
+    credentials: true, // Allow cookies to be sent and received
+  };
+  
+  app.use(cors(corsOptions));
+// app.use(cors());
 connectDB();
 
 app.use(express.json()); 
@@ -31,6 +38,6 @@ app.use(cookieParser('harshsaini'));
 // })
 
 
-app.listen(3000,()=>{
+server.listen(3000,()=>{
     console.log("server starting on port 3000");
 })
